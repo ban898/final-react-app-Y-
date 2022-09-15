@@ -7,6 +7,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
@@ -20,6 +21,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+// eslint-disable-next-line no-unused-vars
 const firebaseApp = initializeApp(firebaseConfig);
 
 const googleProvider = new GoogleAuthProvider();
@@ -28,7 +30,11 @@ googleProvider.setCustomParameters({
   prompt: "select_account",
 });
 
+//FireBase Method which will return the authentication string of a user
+//Notice this method keep tracking if you signed in or not
+//You will be signed in aslong as YOU DIDNT SIGN OUT MANUALLY (or just use signoutuser method)
 export const auth = getAuth();
+
 export const SignInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
 export const SignInWithGoogleRedirect = () =>
@@ -80,3 +86,7 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 };
 
 export const signOutUser = async () => await signOut(auth);
+
+export const onAuthStateChangedListener = (callback) => {
+  onAuthStateChanged(auth, callback);
+};

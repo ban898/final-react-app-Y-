@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import {
   SignInWithGooglePopup,
   createUserDocumentFromAuth,
@@ -7,7 +7,6 @@ import {
 
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
-import { UserContext } from "../../contexts/user.context";
 
 import "./sign-in-form.styles.scss";
 
@@ -20,17 +19,12 @@ const SignInForm = () => {
   const [formFields, SetFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
-  //UseContext will return both CurrentUser and SetCurrentUser
-  //Then we destructure it to use only SetCurrentUser
-  const { setCurrentUser } = useContext(UserContext);
-
   const resetFormFields = () => {
     SetFormFields(defaultFormFields);
   };
 
   const signInWithGoogle = async () => {
-    const { user } = await SignInWithGooglePopup();
-    await createUserDocumentFromAuth(user);
+    await SignInWithGooglePopup();
   };
 
   const handleSubmit = async (event) => {
@@ -41,11 +35,10 @@ const SignInForm = () => {
         email,
         password
       );
+      resetFormFields();
       //And here we actually use The setUser We got before to actually set the value
       //Because at this point we have the value we want inside of user
-      setCurrentUser(user);
-
-      resetFormFields();
+      // setCurrentUser(user);
     } catch (error) {
       switch (error.code) {
         case "auth/wrong-password":
